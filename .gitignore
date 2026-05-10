@@ -1,0 +1,5 @@
+.obsidian/
+.trash/
+*.DS_Store
+04 Credenciales/APIs y Tokens.md
+.env
