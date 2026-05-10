@@ -60,9 +60,10 @@ fi
 if command -v claude &>/dev/null; then
   ok "Claude Code instalado"
 else
-  warn "Claude Code no encontrado. Instalando..."
-  npm install -g @anthropic-ai/claude-code
-  ok "Claude Code instalado"
+  err "Claude Code no está instalado."
+  echo "  Instálalo primero corriendo el setup del VPS template:"
+  echo "  → https://github.com/mazeos/client-vps-template"
+  exit 1
 fi
 
 # ════════════════════════════════════════════════════════════════

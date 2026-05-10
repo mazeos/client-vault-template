@@ -51,9 +51,10 @@ if (Get-Command node -ErrorAction SilentlyContinue) {
 if (Get-Command claude -ErrorAction SilentlyContinue) {
     Ok "Claude Code instalado"
 } else {
-    Warn "Claude Code no encontrado. Instalando..."
-    npm install -g "@anthropic-ai/claude-code"
-    Ok "Claude Code instalado"
+    Err "Claude Code no está instalado."
+    Write-Host "  Instálalo primero corriendo el setup del VPS template:"
+    Write-Host "  → https://github.com/mazeos/client-vps-template"
+    exit 1
 }
 
 # ════════════════════════════════════════════════════════════════
