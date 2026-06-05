@@ -1,5 +1,15 @@
 .obsidian/
 .trash/
 *.DS_Store
-04 Credenciales/APIs y Tokens.md
 .env
+
+# Credenciales — nunca subir a git
+03 Credenciales/APIs y Tokens.md
+03 Credenciales/Servicios.md
+
+# Contenido generado en runtime
+00 Operating System/Activos/Memoria/*
+!00 Operating System/Activos/Memoria/.gitkeep
+!00 Operating System/Activos/Memoria/MEMORY.md
+00 Operating System/Claude Code/Conversaciones/*
+!00 Operating System/Claude Code/Conversaciones/.gitkeep
