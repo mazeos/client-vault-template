@@ -140,3 +140,11 @@ autor: fundador | agente
 - Crear o eliminar departamentos dentro de Growth Engine
 - Modificar `REGLAS.md` o `MAPA.md`
 - Mover credenciales **del negocio** fuera de `03 Credenciales/` (las de clientes van en `Clientes/{Nombre}/Credenciales/`)
+
+## 9. Flujo de aprobación y cambios de estructura
+
+- **Contenido sustancial nuevo** (activos, SOPs, fichas, decisiones, análisis): se propone en el chat, el fundador aprueba con un "dale / guardalo / aprobado", y recién entonces se escribe. Una pregunta, un "está alineado" o un "me gusta" **no** son aprobación. Ante la duda, preguntar "¿lo dejo en el vault?".
+- **Credenciales, actualizaciones operativas y correcciones de forma**: se escriben directo, en el momento, sin pedir permiso.
+- **Ante un cambio de contexto del negocio** (sociedad nueva, cambio de foco, producto nuevo), la respuesta correcta es la de **menor movimiento**: una nota, un activo, un link. Mover secciones raíz, renombrar carpetas o editar `REGLAS.md` y el guardian requiere preguntar primero, aunque parezca la consecuencia lógica de lo que dijo el fundador.
+- **Backup del vault entero antes de cualquier cambio de estructura.**
+- **Lo que el fundador borró o editó a mano es una decisión, no un accidente.** No se recrea ni se "arregla" salvo pedido explícito.

@@ -46,6 +46,19 @@ _Sistema/               → Constitución, mapa, templates, skills
 ## Memoria interna
 Usar el sistema de memoria de Claude Code (`__MEMORY_DIR__`) para guardar decisiones del negocio, feedback sobre cómo trabajar con el fundador, estado de proyectos y referencias a sistemas externos. El hook de `PostToolUse` sincroniza esos archivos al vault automáticamente (`00 Operating System/Activos/Memoria/`). **Nunca editar la copia del vault**: se pisa en cada sync; corregir siempre el archivo fuente.
 
+## Cómo trabajar con el fundador
+
+- **Solo lo que pide explícitamente.** Si algo "conviene" o "es lógico", se propone en una línea y se espera el OK. Un OK vale para esa acción, no para las siguientes.
+- **Una acción por vez en canales externos** (WhatsApp, Instagram, email, SMS, Discord): mostrar qué se va a enviar y a quién, y esperar el sí puntual. Nunca encadenar pruebas contra Meta o Instagram: cada envío fallido cuenta contra la cuenta.
+- **Contenido sustancial al vault: borrador primero.** Proponer en el chat, esperar aprobación explícita, recién entonces escribir. Credenciales y mantenimiento operativo van directo (ver `REGLAS.md`, regla 9).
+- **Menor movimiento ante cambios de contexto.** Nunca reestructurar el vault, tocar `REGLAS.md` ni el guardian por cuenta propia. Backup antes de tocar estructura.
+- **Lo borrado a mano no se recrea.** Un borrado o edición manual del fundador es una decisión editorial.
+- **Credencial nueva → vault en el mismo turno**, más todo `.env` o config que la consuma. Antes de declarar una credencial vencida, buscar en todo el vault y en `~/.claude/` por el prefijo del token y validarla contra la API del servicio.
+- **El vault es la única fuente de verdad.** No migrar contenido desde Notion u otras herramientas sin que el fundador lo pida.
+- **"Listo para probar" significa recorrido como usuario real**, no endpoints que responden 200.
+- **Prompts corregidos se entregan completos**, nunca en bloques sueltos.
+- **Una pregunta a la vez**, también en entrevistas y discovery.
+
 ## Comportamiento general
 - Respuestas cortas y directas, sin relleno
 - Verificar el estado real de los archivos antes de suponer
