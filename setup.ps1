@@ -183,26 +183,10 @@ with open(settings_path, 'w', encoding='utf-8') as f:
 & $PyCmd -c $SettingsScript $SettingsPath $HooksDir $pyPath
 Ok "settings.json configurado (nota: delete-guard requiere bash; opcional en Windows)"
 
-# -- Configurar MCP de Obsidian --
-$ClaudeJson = "$env:USERPROFILE\.claude.json"
-if (-not (Test-Path $ClaudeJson)) { '{"mcpServers": {}}' | Set-Content $ClaudeJson -Encoding UTF8 }
-$McpScript = @"
-import json, sys
-path, api_key = sys.argv[1], sys.argv[2]
-with open(path, encoding='utf-8') as f:
-    c = json.load(f)
-c.setdefault('mcpServers', {})
-if 'obsidian' not in c['mcpServers']:
-    c['mcpServers']['obsidian'] = {
-        'command': 'npx',
-        'args': ['-y', 'mcp-obsidian'],
-        'env': {'OBSIDIAN_API_KEY': api_key, 'OBSIDIAN_HOST': '127.0.0.1', 'OBSIDIAN_PORT': '27123'}
-    }
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(c, f, indent=2, ensure_ascii=False)
-"@
-& $PyCmd -c $McpScript $ClaudeJson $ApiKey
-Ok "MCP de Obsidian configurado en .claude.json"
+# -- Configurar MCP de Obsidian (obsidian-mcp-server, el mismo que usa Maze) --
+& claude mcp remove -s user obsidian 2>$null | Out-Null
+& claude mcp add -s user obsidian -e "OBSIDIAN_API_KEY=$ApiKey" -e "OBSIDIAN_BASE_URL=https://127.0.0.1:27124" -e "OBSIDIAN_VERIFY_SSL=false" -- npx -y obsidian-mcp-server | Out-Null
+Ok "MCP de Obsidian configurado (obsidian-mcp-server -> https://127.0.0.1:27124)"
 
 # ================================================================
 Step "[ PASO 4 / 5 ]  Verificacion final"
@@ -233,7 +217,7 @@ if ($errors -eq 0) {
 Write-Host ""
 Write-Host "  Proximos pasos:" -ForegroundColor White
 Write-Host "  1. Abre Obsidian -> vault: $VaultPath"
-Write-Host "  2. Settings -> Community Plugins -> verifica 'Local REST API' activo"
+Write-Host "  2. Settings -> Community Plugins -> 'Local REST API' activo, con el servidor HTTPS (puerto 27124) encendido"
 Write-Host "  3. Corre: cd `$HOME && claude"
 Write-Host ""
 Write-Host "  Para configurar el servidor y los MCPs:"

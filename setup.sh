@@ -211,32 +211,12 @@ with open(settings_path, "w", encoding="utf-8") as f:
 PYEOF
 ok "settings.json configurado (5 eventos)"
 
-# -- Configurar MCP de Obsidian en ~/.claude.json --
-CLAUDE_JSON="$HOME/.claude.json"
-[[ ! -f "$CLAUDE_JSON" ]] && echo '{"mcpServers": {}}' > "$CLAUDE_JSON"
-python3 - "$CLAUDE_JSON" "$OBSIDIAN_API_KEY" <<'PYEOF'
-import json, sys
-path, api_key = sys.argv[1], sys.argv[2]
-with open(path, encoding="utf-8") as f:
-    c = json.load(f)
-c.setdefault("mcpServers", {})
-if "obsidian" not in c["mcpServers"]:
-    c["mcpServers"]["obsidian"] = {
-        "command": "npx",
-        "args": ["-y", "mcp-obsidian"],
-        "env": {
-            "OBSIDIAN_API_KEY": api_key,
-            "OBSIDIAN_HOST": "127.0.0.1",
-            "OBSIDIAN_PORT": "27123"
-        }
-    }
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(c, f, indent=2, ensure_ascii=False)
-    print("nuevo")
-else:
-    print("existe")
-PYEOF
-ok "MCP de Obsidian configurado en ~/.claude.json"
+# -- Configurar MCP de Obsidian (obsidian-mcp-server, el mismo que usa Maze) --
+claude mcp remove -s user obsidian >/dev/null 2>&1 || true
+claude mcp add -s user obsidian \
+  -e "OBSIDIAN_API_KEY=$OBSIDIAN_API_KEY" -e "OBSIDIAN_BASE_URL=https://127.0.0.1:27124" -e "OBSIDIAN_VERIFY_SSL=false" \
+  -- npx -y obsidian-mcp-server >/dev/null
+ok "MCP de Obsidian configurado (obsidian-mcp-server → https://127.0.0.1:27124)"
 
 # ════════════════════════════════════════════════════════════════
 step "[ PASO 4 / 5 ]  Verificación final"
@@ -275,7 +255,7 @@ fi
 echo ""
 echo -e "${BOLD}  Próximos pasos:${NC}"
 echo "  1. Abre Obsidian → vault: $VAULT_PATH"
-echo "  2. Settings → Community Plugins → verifica que 'Local REST API' esté activo"
+echo "  2. Settings → Community Plugins → 'Local REST API' activo y con el servidor HTTPS (puerto 27124) encendido"
 echo "  3. Corre:  cd ~ && claude"
 echo "  4. Debe aparecer: 'Cargando contexto desde vault...'"
 echo ""
