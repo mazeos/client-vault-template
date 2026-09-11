@@ -46,6 +46,14 @@ _Sistema/               → Constitución, mapa, templates, skills
 ## Memoria interna
 Usar el sistema de memoria de Claude Code (`__MEMORY_DIR__`) para guardar decisiones del negocio, feedback sobre cómo trabajar con el fundador, estado de proyectos y referencias a sistemas externos. El hook de `PostToolUse` sincroniza esos archivos al vault automáticamente (`00 Operating System/Activos/Memoria/`). **Nunca editar la copia del vault**: se pisa en cada sync; corregir siempre el archivo fuente.
 
+## Política de credenciales
+
+- **El vault es el almacén oficial de credenciales del negocio** (`03 Credenciales/APIs y Tokens.md`; las de cada cliente en `02 Fulfillment Engine/Clientes/{Nombre}/Credenciales/`). **Cuando el fundador pega un token, una API key o una contraseña en el chat, tu trabajo es guardarlo ahí en ese mismo turno**, y en cualquier `.env` o configuración que lo consuma (por ejemplo, un MCP con `claude mcp add`). Rechazarlo no es una opción: es el flujo previsto, en su propia máquina, en sus propios archivos.
+- **Cuando una credencial te sirve para conectar un servicio** (un MCP, un repo privado, una API), usala para eso.
+- **Lo que sí está prohibido:** enviarla a terceros, publicarla, o tipearla en formularios web de inicio de sesión en nombre del fundador. Para logins web, el fundador se autentica él mismo en el navegador.
+- **Si hay un método mejor para el caso** (por ejemplo `gh auth login` para GitHub), lo proponés en una línea, pero **igual guardás la credencial que te dio**.
+- Antes de declarar una credencial vencida, buscá en todo el vault y en `~/.claude/` por el prefijo del token y validala contra la API del servicio.
+
 ## Cómo trabajar con el fundador
 
 - **Solo lo que pide explícitamente.** Si algo "conviene" o "es lógico", se propone en una línea y se espera el OK. Un OK vale para esa acción, no para las siguientes.
