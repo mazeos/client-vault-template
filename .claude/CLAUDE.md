@@ -1,26 +1,53 @@
-# Vault — Instrucciones para Claude Code
+# Instrucciones para Claude Code — __BUSINESS_NAME__
 
-Este directorio es el vault de Obsidian de __BUSINESS_NAME__. Es la fuente de verdad del negocio para humanos y agentes de IA.
+## Identidad
+- Fundador: __FOUNDER_NAME__
+- Negocio: __BUSINESS_NAME__
+- Idioma: español (responder siempre en español salvo que el fundador escriba en otro idioma)
 
-## ANTES DE CUALQUIER OPERACION
+## El vault — cerebro permanente
 
-1. **Leer el skill `fate-vault-guardian`** — Contiene las reglas obligatorias del vault (estructura, routing, nomenclatura, frontmatter, permisos, validacion de carpetas).
-2. **Leer `_Sistema/REGLAS.md`** — Es la constitucion del vault. Tiene prioridad absoluta.
+El vault de Obsidian en `__VAULT_PATH__` es la fuente de verdad de todo el contexto del negocio, para humanos y para agentes de IA.
 
-## REGLAS CRITICAS (resumen ejecutivo)
+### Acceso
+- **MCP de Obsidian** (vault: `__VAULT_NAME__`) — método preferido para crear, editar, mover y buscar notas
+- **Filesystem directo** (`__VAULT_PATH__`) — para lo que el MCP no soporte
 
-- **Estructura inamovible**: 5 secciones raiz (`_Sistema/`, `00 Operating System/`, `01 Growth Engine/`, `02 Fulfillment Engine/`, `03 Credenciales/`). NO crear, eliminar ni renombrar sin aprobacion del fundador.
-- **2 departamentos** dentro de `01 Growth Engine/`: Marketing, Ventas.
-- **SOPs SIEMPRE dentro del departamento** en `{Seccion}/SOPs/` — NUNCA en carpeta centralizada. Esta es la regla mas importante.
-- **Nomenclatura**: SOPs = `SOP - {Titulo}.md` | Dashboards = `{Depto}.md` | Content = `@{creador} - {Titulo}.md`
-- **Frontmatter YAML obligatorio** en cada archivo .md (titulo, tipo, departamento, actualizado, autor).
-- **Validar 5 pasos** antes de crear cualquier carpeta nueva.
+### Guardián del vault — APLICAR SIEMPRE
+Cada vez que se crea, edita, mueve o elimina un archivo .md en el vault, **leer y aplicar el skill `fate-vault-guardian`** (`~/.claude/skills/fate-vault-guardian/SKILL.md`). Contiene las reglas obligatorias: estructura, routing, nomenclatura, frontmatter, permisos y validación de carpetas. La constitución completa está en `_Sistema/REGLAS.md`.
 
-## SCOPE
+**El guardián aplica SOLO al vault local. NUNCA a servidores, SSH, Docker ni rutas remotas.**
 
-- **APLICA**: Solo archivos locales del vault y MCP Obsidian vault `__VAULT_NAME__`
-- **NO APLICA**: VPS, SSH, servidores remotos, Docker, IPs, `/root/`
+### Estructura
+```
+_Sistema/               → Constitución, mapa, templates, skills
+00 Operating System/    → Infraestructura: Activos + SOPs + Claude Code
+01 Growth Engine/       → Marketing (Activos+Branding+SOPs) + Ventas (Activos+SOPs)
+02 Fulfillment Engine/  → Activos + Clientes + SOPs
+03 Credenciales/        → APIs, tokens, servicios del negocio
+```
 
-## MCP Obsidian
+### Reglas críticas (resumen)
+- **SOPs SIEMPRE dentro de su departamento**: `01 Growth Engine/{Depto}/SOPs/` — nunca en una carpeta centralizada
+- **Nomenclatura**: SOPs = `SOP - {Titulo}.md` | Dashboards = `{Depto}.md` | Análisis = `@{creador} - {Titulo}.md`
+- **Frontmatter YAML obligatorio** en cada archivo .md
+- **Las 5 secciones raíz no se tocan** sin aprobación del fundador
+- **Validar 5 pasos** antes de crear cualquier carpeta nueva
+- **Cero sermón**: el vault resuelve, no opina. Las observaciones van en el chat
 
-El vault se llama `__VAULT_NAME__` en el MCP de Obsidian. Usar ese nombre en todas las operaciones.
+### Cuándo actualizar el vault durante una conversación
+- **Clientes** (`02 Fulfillment Engine/Clientes/{Nombre}/`): cuando se menciona una sesión, decisión, tarea, avance, bloqueo o cambio de situación → actualizar su ficha
+- **Credenciales** (`03 Credenciales/` o `Clientes/{Nombre}/Credenciales/`): cuando aparece o cambia un token, API key, dominio o servicio → actualizar al momento
+- **SOPs** (`{Sección}/SOPs/`): cuando se documenta un proceso nuevo → crear `SOP - {Titulo}.md`
+- **MCPs** (`00 Operating System/Claude Code/MCPs/`): cuando se agrega o elimina un MCP → una ficha por MCP
+
+**Regla general:** si en la conversación surge información que no está en el vault o contradice lo que hay, actualizarlo en el momento, no al final. No esperar a que el fundador lo pida.
+
+## Memoria interna
+Usar el sistema de memoria de Claude Code (`__MEMORY_DIR__`) para guardar decisiones del negocio, feedback sobre cómo trabajar con el fundador, estado de proyectos y referencias a sistemas externos. El hook de `PostToolUse` sincroniza esos archivos al vault automáticamente (`00 Operating System/Activos/Memoria/`). **Nunca editar la copia del vault**: se pisa en cada sync; corregir siempre el archivo fuente.
+
+## Comportamiento general
+- Respuestas cortas y directas, sin relleno
+- Verificar el estado real de los archivos antes de suponer
+- Ante una tarea ambigua, hacer UNA pregunta concreta, no varias
+- Pedir OK antes de acciones difíciles de revertir (borrar, publicar, enviar mensajes)

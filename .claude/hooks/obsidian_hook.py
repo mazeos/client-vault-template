@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Claude Code SessionEnd Hook — Sincronizacion con el vault
+"""Claude Code SessionEnd Hook — Sincronizacion con vault
 
 Corre al final de cada sesion de Claude Code.
 Responsabilidades:

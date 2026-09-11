@@ -28,7 +28,7 @@ echo ""
 echo "  Configura tu vault de Obsidian con Claude Code:"
 echo "  estructura, 5 hooks de sesión, skill y MCP de Obsidian."
 echo ""
-read -p "  Presiona Enter para comenzar..."
+read -p "  Presiona Enter para comenzar..." < /dev/tty
 
 # ════════════════════════════════════════════════════════════════
 step "[ PASO 1 / 5 ]  Verificar prerrequisitos"
@@ -73,33 +73,33 @@ echo ""
 
 DEFAULT_VAULT="$HOME/Documents/Obsidian Vault"
 ask "Ruta del vault de Obsidian [${DEFAULT_VAULT}]:"
-read -p "  → " VAULT_PATH
+read -p "  → " VAULT_PATH < /dev/tty
 VAULT_PATH="${VAULT_PATH:-$DEFAULT_VAULT}"
 
 ask "Nombre de tu negocio:"
-read -p "  → " BUSINESS_NAME
+read -p "  → " BUSINESS_NAME < /dev/tty
 while [[ -z "$BUSINESS_NAME" ]]; do
-  err "No puede estar vacío."; read -p "  → " BUSINESS_NAME
+  err "No puede estar vacío."; read -p "  → " BUSINESS_NAME < /dev/tty
 done
 
 ask "Tu nombre (fundador):"
-read -p "  → " FOUNDER_NAME
+read -p "  → " FOUNDER_NAME < /dev/tty
 while [[ -z "$FOUNDER_NAME" ]]; do
-  err "No puede estar vacío."; read -p "  → " FOUNDER_NAME
+  err "No puede estar vacío."; read -p "  → " FOUNDER_NAME < /dev/tty
 done
 
 ask "Nombre del vault en Obsidian (el que aparece arriba a la izquierda):"
-read -p "  → " VAULT_NAME
+read -p "  → " VAULT_NAME < /dev/tty
 while [[ -z "$VAULT_NAME" ]]; do
-  err "No puede estar vacío."; read -p "  → " VAULT_NAME
+  err "No puede estar vacío."; read -p "  → " VAULT_NAME < /dev/tty
 done
 
 ask "API Key del plugin 'Local REST API' de Obsidian:"
 echo "  (Obsidian → Settings → Community Plugins → Local REST API → API Key)"
-read -p "  → " OBSIDIAN_API_KEY
+read -p "  → " OBSIDIAN_API_KEY < /dev/tty
 while [[ -z "$OBSIDIAN_API_KEY" ]]; do
   err "No puede estar vacío. Instala el plugin 'Local REST API' primero."
-  read -p "  → " OBSIDIAN_API_KEY
+  read -p "  → " OBSIDIAN_API_KEY < /dev/tty
 done
 
 echo ""
@@ -108,7 +108,7 @@ echo -e "  Negocio  → ${BOLD}$BUSINESS_NAME${NC}"
 echo -e "  Fundador → ${BOLD}$FOUNDER_NAME${NC}"
 echo -e "  MCP name → ${BOLD}$VAULT_NAME${NC}"
 echo ""
-read -p "  ¿Continuar? [S/n]: " CONFIRM
+read -p "  ¿Continuar? [S/n]: " CONFIRM < /dev/tty
 [[ "${CONFIRM:-S}" =~ ^[nN] ]] && echo "  Cancelado." && exit 0
 
 # ── Detectar rutas de Claude Code ───────────────────────────────
@@ -126,6 +126,17 @@ step "[ PASO 3 / 5 ]  Instalar vault, hooks y skill"
 echo ""
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Si el script se bajó suelto (curl), traer el repo completo a un directorio temporal
+if [[ ! -d "$SCRIPT_DIR/_Sistema" ]]; then
+  TMP_REPO="$(mktemp -d)"
+  if command -v git &>/dev/null; then
+    git clone -q --depth 1 https://github.com/mazeos/client-vault-template.git "$TMP_REPO"
+  else
+    curl -sSL https://github.com/mazeos/client-vault-template/archive/refs/heads/main.tar.gz | tar xz -C "$TMP_REPO" --strip-components=1
+  fi
+  SCRIPT_DIR="$TMP_REPO"
+  ok "Template descargado"
+fi
 
 # -- Copiar estructura del vault --
 mkdir -p "$VAULT_PATH"

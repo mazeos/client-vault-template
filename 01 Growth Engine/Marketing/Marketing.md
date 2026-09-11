@@ -2,7 +2,7 @@
 titulo: "Marketing"
 tipo: dashboard
 departamento: marketing
-actualizado: 2026-06-05
+actualizado: 2026-09-11
 autor: fundador
 ---
 
@@ -13,7 +13,6 @@ autor: fundador
 | Area | Estado | Ultima actualizacion |
 |------|--------|---------------------|
 | Branding | | |
-| Contenido | | |
 | Activos | | |
 
 ## Prioridades actuales
@@ -26,7 +25,6 @@ autor: fundador
 
 - `Activos/` — conocimiento, banco de ángulos, diagnósticos
 - `Branding/` — identidad visual, tono, guías de marca
-- `Contenido/` — guiones, piezas, análisis de contenido
 - `SOPs/` — procedimientos de marketing
 
 ---

@@ -1,8 +1,10 @@
 ---
 titulo: "Reglas del Vault"
 tipo: sistema
-actualizado: 2026-06-05
+actualizado: 2026-09-11
 autor: fundador
+departamento: sistema
+
 ---
 
 # Reglas del Vault
@@ -29,7 +31,7 @@ Secciones raíz (NO crear, eliminar ni renombrar sin aprobación del fundador):
 - `Claude Code/` — conversaciones, MCPs, contexto de Claude
 
 **`01 Growth Engine/`**
-- `Marketing/` → `Activos/` + `Branding/` + `Contenido/` + `SOPs/`
+- `Marketing/` → `Activos/` + `Branding/` + `SOPs/`
 - `Ventas/` → `Activos/` + `SOPs/`
 
 **`02 Fulfillment Engine/`**
@@ -42,7 +44,9 @@ Secciones raíz (NO crear, eliminar ni renombrar sin aprobación del fundador):
 ## 2. Definición de tipos de documento
 
 ### Activo
-Documento **informativo**. Almacena conocimiento, contexto, referencias o datos del área. **No contiene pasos ni procedimientos.** Ejemplos: banco de ángulos, documentos de oferta, fichas de herramientas, diagnósticos, blueprints.
+Documento **informativo y resolutivo**. Almacena conocimiento, contexto, referencias o datos del área. **No contiene pasos ni procedimientos.** Ejemplos: banco de ángulos, documentos de oferta, fichas de herramientas, diagnósticos, blueprints.
+
+**El activo RESUELVE el concepto que trabaja.** Si el activo es sobre la garantía, el activo **tiene** la garantía. Ver Regla 5.6 — *Cero sermón*.
 
 ### SOP
 Documento **procedimental**. Define cómo ejecutar un proceso de forma estandarizada. Sigue el template `_tpl-sop.md` obligatoriamente:
@@ -85,6 +89,30 @@ autor: fundador | agente
 4. Máximo H3 (3 niveles de heading)
 5. Dashboards usan tablas de estado
 
+### 5.6 · Cero sermón — el vault resuelve, no opina
+
+> **Los activos son información RESOLUTIVA y proactiva a la definición del concepto que trabajan. El sermón va en el chat, nunca en el vault.**
+
+**Prohibido dentro de un activo:**
+
+| ❌ | Ejemplo |
+|---|---|
+| Señalar un hueco sin llenarlo | *"Falta definir la garantía"* |
+| Emitir juicios sobre el estado de las cosas | *"El veredicto es que esto no existe"* · *"La ironía es que…"* |
+| Moraleja, reproche o urgencia | *"El vault no factura"* · *"Falta cámara"* |
+| Diagnosticar sin proponer | *"Este es el problema"* y punto |
+
+**Obligatorio:**
+
+| ✅ | Cómo se ve |
+|---|---|
+| **El concepto resuelto** | Si el activo trabaja la garantía → **el activo tiene la garantía escrita** |
+| **Propuesta ante el hueco** | Si algo falta, se **propone** — no se reporta |
+| **Preguntas, no reproches** | Lo que no se puede resolver sin el fundador se marca **🤖** como *pregunta concreta* |
+| **Diagnóstico + salida** | Un diagnóstico solo es válido si viene con el plan al lado |
+
+> **La devolución, el criterio, las advertencias y las observaciones se dan en la conversación.** El vault es la herramienta de trabajo, no el lugar donde se le habla al fundador.
+
 ## 6. Routing
 
 | Si necesitas guardar... | Va en... |
@@ -92,7 +120,8 @@ autor: fundador | agente
 | Un procedimiento accionable | `{Sección}/SOPs/SOP - {Titulo}.md` |
 | Información/contexto/conocimiento | `{Sección}/Activos/` |
 | Ficha de cliente | `02 Fulfillment Engine/Clientes/{Nombre}/` |
-| Credencial, API key, token, password | `03 Credenciales/` — NUNCA en otro lugar |
+| Credencial **del negocio** (API key, token, password propios) | `03 Credenciales/` |
+| Credencial **de un cliente** (API key, token, password del cliente) | `02 Fulfillment Engine/Clientes/{Nombre}/Credenciales/` |
 | Conversación de Claude Code | `00 Operating System/Claude Code/Conversaciones/` |
 
 **Regla de SOPs:** siempre dentro de la carpeta `SOPs/` de su sección. NUNCA sueltos ni en carpeta centralizada entre secciones.
@@ -110,4 +139,4 @@ autor: fundador | agente
 - Crear, eliminar o renombrar sección raíz (00–03)
 - Crear o eliminar departamentos dentro de Growth Engine
 - Modificar `REGLAS.md` o `MAPA.md`
-- Mover credenciales fuera de `03 Credenciales/`
+- Mover credenciales **del negocio** fuera de `03 Credenciales/` (las de clientes van en `Clientes/{Nombre}/Credenciales/`)

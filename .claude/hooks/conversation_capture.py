@@ -166,23 +166,71 @@ def limpiar_nombre_archivo(texto, max_palabras=5):
     return nombre[:60].strip() if nombre else "Sin titulo"
 
 
+def sanear_titulo(texto):
+    """Limpia un titulo para usarlo como nombre de archivo."""
+    texto = re.sub(r'[<>:"/\\|?*\n\r\t]', ' ', texto or "")
+    texto = " ".join(texto.split())
+    return texto[:70].strip()
+
+
+def extraer_titulo_sesion(jsonl_path):
+    """Titulo que Claude Code muestra en la lista de sesiones.
+
+    Prioridad: custom-title (puesto a mano) > ultimo ai-title > None.
+    """
+    custom = None
+    ai = None
+    try:
+        for linea in jsonl_path.open(encoding="utf-8"):
+            if '"custom-title"' not in linea and '"ai-title"' not in linea:
+                continue
+            try:
+                obj = json.loads(linea)
+            except Exception:
+                continue
+            if obj.get("type") == "custom-title" and obj.get("customTitle"):
+                custom = obj["customTitle"]
+            elif obj.get("type") == "ai-title" and obj.get("aiTitle"):
+                ai = obj["aiTitle"]
+    except Exception:
+        return None
+    return sanear_titulo(custom or ai) or None
+
+
+def limpiar_versiones_previas(carpeta, session_id, archivo_destino):
+    """Borra .md anteriores de la misma sesion (el titulo cambia al renombrar)."""
+    for md in carpeta.glob("*.md"):
+        if md == archivo_destino:
+            continue
+        try:
+            cabecera = md.read_text(encoding="utf-8")[:600]
+        except Exception:
+            continue
+        if f"session_id: {session_id}" in cabecera:
+            try:
+                md.unlink()
+            except Exception:
+                pass
+
+
 def ts_a_datetime(ts_str):
     """Convierte timestamp ISO a datetime en hora local del sistema."""
     try:
         dt_utc = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
-        return dt_utc.astimezone()  # Convierte a timezone local
+        return dt_utc.astimezone()  # Convierte a timezone local (zona horaria del sistema)
     except Exception:
         return datetime.now().astimezone()
 
 
-def construir_markdown(session_id, cwd, turns, herramientas, dt_inicio):
+def construir_markdown(session_id, cwd, turns, herramientas, dt_inicio, titulo=None):
     """Construye el markdown completo de la conversacion."""
     proyecto = Path(cwd).name if cwd else "desconocido"
     fecha = dt_inicio.strftime("%Y-%m-%d")
     hora = dt_inicio.strftime("%H:%M")
+    titulo_fm = (titulo or f"Conversación {hora} — {proyecto}").replace('"', "'")
 
     frontmatter = f"""---
-titulo: "Conversación {hora} — {proyecto}"
+titulo: "{titulo_fm}"
 tipo: conversacion
 departamento: operating-system
 actualizado: {fecha}
@@ -260,24 +308,35 @@ def main():
     # Timestamp de inicio (primer turn del usuario)
     dt_inicio = ts_a_datetime(turns[0]["timestamp"])
 
-    # Nombre basado en primeras 5 palabras del primer mensaje
-    primer_texto = turns[0]["user"]
-    nombre_corto = limpiar_nombre_archivo(primer_texto, max_palabras=5)
+    # Titulo: el mismo que muestra Claude Code; si no hay, primeras 5 palabras
+    titulo = extraer_titulo_sesion(jsonl_path)
+    nombre_corto = titulo or limpiar_nombre_archivo(turns[0]["user"], max_palabras=5)
 
     # Nombre final del archivo
     hora_str = dt_inicio.strftime("%H-%M")
-    session_short = session_id[:6] if session_id else "??????"
-    nombre_archivo = f"{hora_str} - {session_short} - {nombre_corto}.md"
+    nombre_archivo = f"{hora_str} - {nombre_corto}.md"
 
     # Crear carpeta por fecha
     fecha_str = dt_inicio.strftime("%Y-%m-%d")
     carpeta_dia = Path(CONVERSACIONES_DIR) / fecha_str
     carpeta_dia.mkdir(parents=True, exist_ok=True)
 
-    # Escribir (sobreescribir) el archivo
-    markdown = construir_markdown(session_id, cwd, turns, herramientas, dt_inicio)
+    # Colision: mismo horario y titulo que OTRA sesion -> desambiguar con el id
     archivo_destino = carpeta_dia / nombre_archivo
+    if archivo_destino.exists():
+        try:
+            cabecera = archivo_destino.read_text(encoding="utf-8")[:600]
+        except Exception:
+            cabecera = ""
+        if f"session_id: {session_id}" not in cabecera:
+            archivo_destino = carpeta_dia / f"{hora_str} - {nombre_corto} ({session_id[:6]}).md"
+
+    # Escribir (sobreescribir) el archivo
+    markdown = construir_markdown(session_id, cwd, turns, herramientas, dt_inicio, titulo)
     archivo_destino.write_text(markdown, encoding="utf-8")
+
+    # El titulo cambia cuando Claude Code lo genera: borrar el .md viejo
+    limpiar_versiones_previas(carpeta_dia, session_id, archivo_destino)
 
     print(json.dumps({}))
 

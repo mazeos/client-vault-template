@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Claude Code SessionStart Hook — Carga contexto desde el vault
+"""Claude Code SessionStart Hook — Carga contexto desde vault
 
 Corre al inicio de cada sesion de Claude Code.
 Inyecta como contexto el contenido clave del vault de Obsidian para que
@@ -16,7 +16,6 @@ from pathlib import Path
 from datetime import datetime, timedelta, timezone
 
 VAULT = "__VAULT_PATH__"
-NOMBRE_NEGOCIO = "__BUSINESS_NAME__"
 CONVERSACIONES_DIR = f"{VAULT}/00 Operating System/Claude Code/Conversaciones"
 
 # Archivos a leer y exponer como contexto (en orden de prioridad)
@@ -24,8 +23,8 @@ ARCHIVOS_CONTEXTO = [
     (f"{VAULT}/_Sistema/REGLAS.md",                          "Reglas del Vault"),
     (f"{VAULT}/_Sistema/MAPA.md",                            "Mapa del Vault"),
     (f"{VAULT}/01 Growth Engine/Growth Engine.md",            "Growth Engine Dashboard"),
-    (f"{VAULT}/01 Growth Engine/Marketing/Marketing.md",      "Marketing Dashboard"),
     (f"{VAULT}/01 Growth Engine/Ventas/Ventas.md",            "Ventas Dashboard"),
+    (f"{VAULT}/01 Growth Engine/Marketing/Marketing.md",      "Marketing Dashboard"),
     (f"{VAULT}/03 Credenciales/Servicios.md",                "Servicios y Credenciales"),
     (f"{VAULT}/02 Fulfillment Engine/Clientes",               "__DIR__"),
 ]
@@ -111,7 +110,7 @@ def main():
         return
 
     contexto = (
-        f"# Contexto cargado desde el vault ({NOMBRE_NEGOCIO})\n\n"
+        "# Contexto cargado desde vault (__BUSINESS_NAME__)\n\n"
         + "\n\n---\n\n".join(secciones)
     )
 
